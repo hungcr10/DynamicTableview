@@ -23,7 +23,7 @@ class HomeViewController: UIViewController {
                                                Model(name: "Mai Ho", phone: "0917618517", avt: "duy")]
     private var contactSections = [String]()
     private var contactDictionary = [String:[Model]] ()
-    
+    //private var filtered: [Model] = []
     //MARK: - IBOutlet
     @IBOutlet weak var plusView: UIView!
     @IBOutlet weak var mainSearchBar: UISearchBar!
@@ -53,7 +53,6 @@ extension HomeViewController {
         setUpView()
         registerTableViewCell()
         sortContacts()
-
     }
 }
 
@@ -62,12 +61,12 @@ extension HomeViewController {
     private func setUpView() {
         plusView.layer.cornerRadius = plusView.frame.height / 2
         mainTableView.sectionIndexColor = .systemGreen
-        mainSearchBar.delegate = self
     }
     private func registerTableViewCell() {
         mainTableView.register(UINib(nibName: Contants.nibName, bundle: nil), forCellReuseIdentifier: Contants.identifier)
         mainTableView.dataSource = self
         mainTableView.delegate = self
+        mainSearchBar.delegate = self
     }
 }
 
@@ -79,14 +78,6 @@ extension HomeViewController {
         self.present(picker, animated: true, completion: nil)
     }
 }
-
-
-////MARK: - DeleteCell
-//extension HomeViewController {
-//    private func deleteCell(at index: Int) {
-//
-//    }
-//}
 //MARK: - TableViewDataSource
 extension HomeViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -248,14 +239,14 @@ extension UIImage {
 //MARK: - searchbar delegate
 extension HomeViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        contactDatasources  = contactDatasources.filter { $0.name.contains(searchBar.text!) }
+        self.mainTableView.reloadData()
         searchBar.resignFirstResponder()
-        searchBar.text = ""
-        
     }
+    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
             searchBar.resignFirstResponder()
         }
-        
     }
 }
