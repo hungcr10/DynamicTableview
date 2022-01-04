@@ -7,6 +7,7 @@ class HomeTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var phoneLabel: UILabel!
     
+    @IBOutlet weak var phoneImage: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -15,6 +16,7 @@ class HomeTableViewCell: UITableViewCell {
     
     private func setUp() {
         avatarImgView.layer.cornerRadius = avatarImgView.frame.height / 1.5
+        phoneImage.image = UIImage(systemName: "phone.circle.fill")
         
     }
     

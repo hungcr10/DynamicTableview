@@ -62,8 +62,8 @@
                             <constraint firstAttribute="bottom" secondItem="wdW-kv-fQV" secondAttribute="bottom" id="ywJ-Ds-ic8"/>
                         </constraints>
                     </view>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="phone.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="bbW-cc-UfW">
-                        <rect key="frame" x="221.5" y="13" width="30" height="29"/>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="bbW-cc-UfW">
+                        <rect key="frame" x="221.5" y="12.5" width="30" height="30"/>
                         <color key="tintColor" red="0.1112472056" green="0.43085884460000001" blue="0.19400243070000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="30" id="MpL-bp-p8y"/>
@@ -89,12 +89,10 @@
                 <outlet property="avatarImgView" destination="mU6-9d-F7p" id="eYs-EB-VJ8"/>
                 <outlet property="avatarView" destination="Jkf-6o-CSP" id="339-e8-oPm"/>
                 <outlet property="nameLabel" destination="d3r-0C-Wce" id="UpG-rj-Ogx"/>
+                <outlet property="phoneImage" destination="bbW-cc-UfW" id="jHb-MF-7kU"/>
                 <outlet property="phoneLabel" destination="wdW-kv-fQV" id="9Ur-fi-HwA"/>
             </connections>
             <point key="canvasLocation" x="264" y="-15"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="phone.circle.fill" catalog="system" width="128" height="121"/>
-    </resources>
 </document>
