@@ -24,5 +24,9 @@ class HomeTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
     }
-  
+    public func configure(with model: Contact) {
+        self.avatarImgView.image = model.imageCovert
+        self.phoneLabel.text = model.phone
+        self.nameLabel.text = model.name
+    }
 }

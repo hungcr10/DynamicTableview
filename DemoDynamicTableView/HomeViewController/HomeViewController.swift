@@ -6,34 +6,21 @@
 //
 
 import UIKit
-
 class HomeViewController: UIViewController {
-    private var contactDatasources: [Model] = [Model(name: "Dao Hung", phone: "0917618517", avt: "hung"),
-                                               Model(name: "Pham Toan", phone: "0917618517", avt: "toan"),
-                                               Model(name: "Nam Phu", phone: "0917618517", avt: "kiet"),
-                                               Model(name: "Van Kiet", phone: "0917618517", avt: "phu"),
-                                               Model(name: "Anh Pham", phone: "0917618517", avt: "hoang"),
-                                               Model(name: "Anh Tran", phone: "0917618517", avt: "kiet"),
-                                               Model(name: "Bao Nam", phone: "0917618517", avt: "hung"),
-                                               Model(name: "Bao Tin", phone: "0917618517", avt: "toan"),
-                                               Model(name: "Giao Thuy", phone: "0917618517", avt: "phu"),
-                                               Model(name: "Kha Le", phone: "0917618517", avt: "hoang"),
-                                               Model(name: "Le Tin", phone: "0917618517", avt: "hung"),
-                                               Model(name: "Nam Nguyen", phone: "0917618517", avt: "phu"),
-                                               Model(name: "Mai Ho", phone: "0917618517", avt: "duy")]
+
     private var contactSections = [String]()
-    private var contactDictionary = [String:[Model]] ()
-    
+    private var contactDictionary = [String:[Contact]]()
+    private var displayContactDictionary = [String:[Contact]]()
     //MARK: - IBOutlet
     @IBOutlet weak var plusView: UIView!
     @IBOutlet weak var mainSearchBar: UISearchBar!
     @IBOutlet weak var mainTableView: UITableView!
-    
 }
 //MARK: - sortContact
 extension HomeViewController {
-    private func sortContacts() {
-        for contact in contactDatasources {
+    private func sortContacts(modelArr: [Contact]) {
+        contactDictionary.removeAll()
+        for contact in modelArr {
             let contactKey = String(contact.name.prefix(1))
             if var contactValues = contactDictionary[contactKey] {
                 contactValues.append(contact)
@@ -44,6 +31,7 @@ extension HomeViewController {
         }
         contactSections = [String](contactDictionary.keys)
         contactSections = contactSections.sorted(by: { $0 < $1 })
+        displayContactDictionary = contactDictionary
     }
 }
 //MARK: - Life Cycle
@@ -52,11 +40,11 @@ extension HomeViewController {
         super.viewDidLoad()
         setUpView()
         registerTableViewCell()
-        sortContacts()
+        sortContacts(modelArr: contactDatasources)
     }
 }
 
-//MARK: - Setup viewDidLoad
+//MARK: - Helper
 extension HomeViewController {
     private func setUpView() {
         plusView.layer.cornerRadius = plusView.frame.height / 2
@@ -75,7 +63,7 @@ extension HomeViewController {
     @IBAction func pressedAddBtn(_ sender: Any) {
         let picker = UIImagePickerController()
         picker.delegate = self
-        self.present(picker, animated: true, completion: nil)
+        present(picker, animated: true, completion: nil)
     }
 }
 //MARK: - TableViewDataSource
@@ -94,13 +82,8 @@ extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = mainTableView.dequeueReusableCell(withIdentifier: Contants.identifier) as! HomeTableViewCell
         let contactKey = contactSections[indexPath.section]
-        //print("the key \(contactKey)")
-        //print(contactSection)
         if let contactValues = contactDictionary[contactKey] {
-            //print(contactDictionary)
-            cell.avatarImgView.image = contactValues[indexPath.row].imageCovert
-            cell.phoneLabel.text = contactValues[indexPath.row].phone
-            cell.nameLabel.text = contactValues[indexPath.row].name
+            cell.configure(with: contactValues[indexPath.row])
             cell.separatorInset = UIEdgeInsets(top: 0, left: 100, bottom: 0, right: 0)
         }
         return cell
@@ -134,16 +117,16 @@ extension HomeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         // pin
-        let pinAction = UIContextualAction(style: .normal, title: "Pin") { action, view, completionHandler in
+        let pinAction = UIContextualAction(style: .normal, title: "") { action, view, completionHandler in
             completionHandler(true)
         }
-        pinAction.image = UIImage(systemName: "pin.fill")
+        pinAction.image = UIImage(systemName: CellActionImage.pinImg)
         pinAction.backgroundColor = .systemPurple
         // favorite
-        let favoriteAction = UIContextualAction(style: .normal, title: "favorite") { action, view, completionHandler in
+        let favoriteAction = UIContextualAction(style: .normal, title: "") { action, view, completionHandler in
             completionHandler(true)
         }
-        favoriteAction.image = UIImage(systemName: "star.fill")
+        favoriteAction.image = UIImage(systemName: CellActionImage.favoriteImg)
         favoriteAction.backgroundColor = .systemPink
         // swipe action
         let swipeLeading = UISwipeActionsConfiguration(actions: [favoriteAction,pinAction])
@@ -154,37 +137,39 @@ extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
         // delete
-        let deleteAction = UIContextualAction(style: .normal, title: "Delete") { [self] action, view, completionHandler in
+        let deleteAction = UIContextualAction(style: .normal, title: "") { [self] action, view, completionHandler in
             completionHandler(true)
             if contactDictionary[contactSections[indexPath.section]]?.count == 1 {
                 contactSections.remove(at: indexPath.section)
                 self.mainTableView.deleteSections(NSIndexSet(index: indexPath.section) as IndexSet, with: .fade)
             } else {
-                contactDictionary[contactSections[indexPath.section]]?.remove(at: indexPath.row)
-                self.mainTableView.deleteRows(at: [indexPath], with: .automatic)
+                self.contactDictionary[contactSections[indexPath.section]]?.remove(at: indexPath.row)
+                mainTableView.beginUpdates()
+                mainTableView.deleteRows(at: [indexPath], with: .automatic)
+                mainTableView.endUpdates()
             }
         }
-        deleteAction.image = UIImage(systemName: "trash.fill")
+        deleteAction.image = UIImage(systemName: CellActionImage.trashImg)
         deleteAction.backgroundColor = .red
         
         // message
-        let messageAction = UIContextualAction(style: .normal, title: "Message") { action, view, completionHandler in
+        let messageAction = UIContextualAction(style: .normal, title: "") { action, view, completionHandler in
             completionHandler(true)
         }
-        messageAction.image = UIImage(systemName: "message.fill")
+        messageAction.image = UIImage(systemName: CellActionImage.messageImg)
         messageAction.backgroundColor = .systemYellow
         
         // videocall
-        let videoCallAction = UIContextualAction(style: .normal, title: "Video Call") { action, view, completionHandler in
+        let videoCallAction = UIContextualAction(style: .normal, title: "") { action, view, completionHandler in
             completionHandler(true)
         }
-        videoCallAction.image = UIImage(systemName: "video.fill")
+        videoCallAction.image = UIImage(systemName: CellActionImage.videoCallImg)
         videoCallAction.backgroundColor = .systemBlue
         // more
-        let moreAction = UIContextualAction(style: .normal, title: "More") { action, view, completionHandler in
+        let moreAction = UIContextualAction(style: .normal, title: "") { action, view, completionHandler in
             completionHandler(true)
         }
-        moreAction.image = UIImage(systemName: "ellipsis")
+        moreAction.image = UIImage(systemName: CellActionImage.moreImg)
         moreAction.backgroundColor = .systemGray
         // swipe action
         let swipeTrailing = UISwipeActionsConfiguration(actions: [moreAction, deleteAction, messageAction,videoCallAction])
@@ -219,11 +204,7 @@ extension HomeViewController : UIImagePickerControllerDelegate,UINavigationContr
             guard let phoneText = medialTextField.text else {return}
             if nameText.isEmpty == false && phoneText.isEmpty == false {
                 //MARK: - Fix
-                
-                //                let cell: HomeTableViewCell = mainTableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! HomeTableViewCell
-                //                cell.avatarImgView.image = image
-                //                cell.nameLabel.text = nameText
-                //                cell.phoneLabel.text = phoneText
+                // lấy được section-> check lấy row->add
             }
             
         }
@@ -243,14 +224,15 @@ extension UIImage {
 //MARK: - searchbar delegate
 extension HomeViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        //MARK: -Fix
-        contactDatasources = contactDatasources.filter({ $0.name.contains(searchBar.text!)})
-        sortContacts()
-        print(contactDatasources)
+        let filterd = contactDatasources.filter({ $0.name.contains(searchBar.text!.uppercased())})
+        sortContacts(modelArr: filterd)
+        mainTableView.reloadData()
         searchBar.resignFirstResponder()
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
+            sortContacts(modelArr: contactDatasources)
+            mainTableView.reloadData()
             searchBar.resignFirstResponder()
         }
     }

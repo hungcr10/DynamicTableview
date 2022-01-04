@@ -18,7 +18,7 @@
 		3DF9BA66277D98C6007F5462 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3DF9BA64277D98C6007F5462 /* LaunchScreen.storyboard */; };
 		3DF9BA8B277D99C8007F5462 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9BA89277D99C8007F5462 /* HomeViewController.swift */; };
 		3DF9BA8C277D99C8007F5462 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3DF9BA8A277D99C8007F5462 /* HomeViewController.xib */; };
-		3DF9BA96277DF429007F5462 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9BA95277DF429007F5462 /* Model.swift */; };
+		3DF9BA96277DF429007F5462 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF9BA95277DF429007F5462 /* Contact.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,7 +54,7 @@
 		3DF9BA76277D98C7007F5462 /* DemoDynamicTableViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DemoDynamicTableViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DF9BA89277D99C8007F5462 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		3DF9BA8A277D99C8007F5462 /* HomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
-		3DF9BA95277DF429007F5462 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		3DF9BA95277DF429007F5462 /* Contact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,7 +146,7 @@
 		3DF9BA94277DF401007F5462 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				3DF9BA95277DF429007F5462 /* Model.swift */,
+				3DF9BA95277DF429007F5462 /* Contact.swift */,
 				3DE12EAF27818C8900CEFE5A /* Contants.swift */,
 			);
 			path = Model;
@@ -289,7 +289,7 @@
 				3DE12EB027818C8900CEFE5A /* Contants.swift in Sources */,
 				3D89C77627842BA800074B13 /* HomeTableViewCell.swift in Sources */,
 				3DF9BA5A277D98BE007F5462 /* AppDelegate.swift in Sources */,
-				3DF9BA96277DF429007F5462 /* Model.swift in Sources */,
+				3DF9BA96277DF429007F5462 /* Contact.swift in Sources */,
 				3DF9BA5C277D98BE007F5462 /* SceneDelegate.swift in Sources */,
 				3DF9BA8B277D99C8007F5462 /* HomeViewController.swift in Sources */,
 			);
