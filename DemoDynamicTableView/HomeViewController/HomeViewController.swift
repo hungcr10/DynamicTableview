@@ -23,7 +23,7 @@ class HomeViewController: UIViewController {
                                                Model(name: "Mai Ho", phone: "0917618517", avt: "duy")]
     private var contactSections = [String]()
     private var contactDictionary = [String:[Model]] ()
-    //private var filtered: [Model] = []
+    
     //MARK: - IBOutlet
     @IBOutlet weak var plusView: UIView!
     @IBOutlet weak var mainSearchBar: UISearchBar!
@@ -94,7 +94,10 @@ extension HomeViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = mainTableView.dequeueReusableCell(withIdentifier: Contants.identifier) as! HomeTableViewCell
         let contactKey = contactSections[indexPath.section]
+        //print("the key \(contactKey)")
+        //print(contactSection)
         if let contactValues = contactDictionary[contactKey] {
+            //print(contactDictionary)
             cell.avatarImgView.image = contactValues[indexPath.row].imageCovert
             cell.phoneLabel.text = contactValues[indexPath.row].phone
             cell.nameLabel.text = contactValues[indexPath.row].name
@@ -113,7 +116,6 @@ extension HomeViewController: UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerSection = view as! UITableViewHeaderFooterView
-        headerSection.backgroundColor = .lightGray
         headerSection.textLabel?.textColor = .systemGreen
         headerSection.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
     }
@@ -160,9 +162,7 @@ extension HomeViewController: UITableViewDelegate {
             } else {
                 contactDictionary[contactSections[indexPath.section]]?.remove(at: indexPath.row)
                 self.mainTableView.deleteRows(at: [indexPath], with: .automatic)
-                
             }
-            
         }
         deleteAction.image = UIImage(systemName: "trash.fill")
         deleteAction.backgroundColor = .red
@@ -214,14 +214,18 @@ extension HomeViewController : UIImagePickerControllerDelegate,UINavigationContr
             textField.placeholder = "Please enter new phone..."
             medialTextField = textField
         }
-        let doneAction = UIAlertAction(title: "Add", style: .default) {_ in
+        let doneAction = UIAlertAction(title: "Add", style: .default) { [self]_ in
             guard let nameText = beetweenTextField.text else {return}
             guard let phoneText = medialTextField.text else {return}
             if nameText.isEmpty == false && phoneText.isEmpty == false {
-                self.contactDatasources.append(Model(name: nameText, phone: phoneText, avt: image.toPngString()!))
-                self.mainTableView.reloadData()
+                //MARK: - Fix
+                
+                //                let cell: HomeTableViewCell = mainTableView.cellForRow(at: IndexPath(row: 0, section: 0)) as! HomeTableViewCell
+                //                cell.avatarImgView.image = image
+                //                cell.nameLabel.text = nameText
+                //                cell.phoneLabel.text = phoneText
             }
-         
+            
         }
         let cancelAction = UIAlertAction(title: "Done", style: .cancel, handler: nil)
         alert.addAction(doneAction)
@@ -239,11 +243,12 @@ extension UIImage {
 //MARK: - searchbar delegate
 extension HomeViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        contactDatasources  = contactDatasources.filter { $0.name.contains(searchBar.text!) }
-        self.mainTableView.reloadData()
+        //MARK: -Fix
+        contactDatasources = contactDatasources.filter({ $0.name.contains(searchBar.text!)})
+        sortContacts()
+        print(contactDatasources)
         searchBar.resignFirstResponder()
     }
-    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
             searchBar.resignFirstResponder()
