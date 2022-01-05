@@ -13,7 +13,6 @@ class HomeViewController: UIViewController {
         var key: String
         var values: [Contacts]
     }
-    
     private var displayContact: [AphabetContact] = []
     
 //MARK: - IBOutlet
@@ -27,7 +26,7 @@ extension HomeViewController {
         var contactDictionary = [String:[Contacts]]()
         displayContact.removeAll()
         for contact in modelArr {
-            let contactKey = String(contact.name.prefix(1)).uppercased() // aa->A
+            let contactKey = String(contact.name.prefix(1)).uppercased()
             if var contactValues = contactDictionary[contactKey] {
                 contactValues.append(contact)
                 contactDictionary[contactKey] = contactValues
