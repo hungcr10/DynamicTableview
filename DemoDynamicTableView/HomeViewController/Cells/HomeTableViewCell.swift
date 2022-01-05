@@ -6,7 +6,6 @@ class HomeTableViewCell: UITableViewCell {
     @IBOutlet weak var avatarView: UIView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var phoneLabel: UILabel!
-    
     @IBOutlet weak var phoneImage: UIImageView!
     
     override func awakeFromNib() {
@@ -25,7 +24,7 @@ class HomeTableViewCell: UITableViewCell {
 
     }
     public func configure(with model: Contact) {
-        self.avatarImgView.image = model.imageCovert
+        self.avatarImgView.image = model.avt
         self.phoneLabel.text = model.phone
         self.nameLabel.text = model.name
     }

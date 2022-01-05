@@ -6,11 +6,16 @@
 //
 
 import UIKit
-class HomeViewController: UIViewController {
 
-    private var contactSections = [String]()
-    private var contactDictionary = [String:[Contact]]()
-    private var displayContactDictionary = [String:[Contact]]()
+class HomeViewController: UIViewController {
+    
+    struct AphabelContact {
+        var key: String
+        var values: [Contact]
+    }
+    
+    private var displayContact: [AphabelContact] = []
+    
     //MARK: - IBOutlet
     @IBOutlet weak var plusView: UIView!
     @IBOutlet weak var mainSearchBar: UISearchBar!
@@ -19,9 +24,10 @@ class HomeViewController: UIViewController {
 //MARK: - sortContact
 extension HomeViewController {
     private func sortContacts(modelArr: [Contact]) {
-        contactDictionary.removeAll()
+        var contactDictionary = [String:[Contact]]()
+        displayContact.removeAll()
         for contact in modelArr {
-            let contactKey = String(contact.name.prefix(1))
+            let contactKey = String(contact.name.prefix(1)).uppercased() // aa->A
             if var contactValues = contactDictionary[contactKey] {
                 contactValues.append(contact)
                 contactDictionary[contactKey] = contactValues
@@ -29,10 +35,16 @@ extension HomeViewController {
                 contactDictionary[contactKey] = [contact]
             }
         }
-        contactSections = [String](contactDictionary.keys)
-        contactSections = contactSections.sorted(by: { $0 < $1 })
-        displayContactDictionary = contactDictionary
+        let alphabelDic = contactDictionary.sorted { a, b in
+            a.0 < b.0 }
+        for i in alphabelDic {
+            let object = AphabelContact(key: i.key, values: i.value)
+            displayContact.append(object)
+        }
+        
+        
     }
+    
 }
 //MARK: - Life Cycle
 extension HomeViewController {
@@ -40,7 +52,7 @@ extension HomeViewController {
         super.viewDidLoad()
         setUpView()
         registerTableViewCell()
-        sortContacts(modelArr: contactDatasources)
+        sortContacts(modelArr: Contants.contactDatasources)
     }
 }
 
@@ -69,33 +81,31 @@ extension HomeViewController {
 //MARK: - TableViewDataSource
 extension HomeViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return contactSections.count
+        return displayContact.map {$0.key}.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let contactKey = contactSections[section]
-        if let contactValues = contactDictionary[contactKey] {
-            return contactValues.count
-        }
-        return 0
+        
+        let contactValues = Array(displayContact)
+        return contactValues[section].values.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = mainTableView.dequeueReusableCell(withIdentifier: Contants.identifier) as! HomeTableViewCell
-        let contactKey = contactSections[indexPath.section]
-        if let contactValues = contactDictionary[contactKey] {
-            cell.configure(with: contactValues[indexPath.row])
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 100, bottom: 0, right: 0)
-        }
+        cell.configure(with:displayContact[indexPath.section].values[indexPath.row])
+        cell.separatorInset = UIEdgeInsets(top: 0, left: 100, bottom: 0, right: 0)
+        print(indexPath.row)
         return cell
     }
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        return contactSections
+        let keys = displayContact.map({$0.key})
+        return keys
     }
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 15
     }
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return contactSections[section].uppercased()
+        let keys = displayContact.map({$0.key})
+        return keys[section].uppercased()
     }
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         let headerSection = view as! UITableViewHeaderFooterView
@@ -139,11 +149,16 @@ extension HomeViewController: UITableViewDelegate {
         // delete
         let deleteAction = UIContextualAction(style: .normal, title: "") { [self] action, view, completionHandler in
             completionHandler(true)
-            if contactDictionary[contactSections[indexPath.section]]?.count == 1 {
-                contactSections.remove(at: indexPath.section)
+            print("inde", indexPath)
+            if displayContact[indexPath.section].values.count == 1 {
+                let object = displayContact[indexPath.section].values[indexPath.row]
+                Contants.contactDatasources.removeAll { $0.id == object.id}
+                displayContact.remove(at: indexPath.section)
                 self.mainTableView.deleteSections(NSIndexSet(index: indexPath.section) as IndexSet, with: .fade)
             } else {
-                self.contactDictionary[contactSections[indexPath.section]]?.remove(at: indexPath.row)
+                let object = displayContact[indexPath.section].values[indexPath.row]
+                displayContact[indexPath.section].values.remove(at: indexPath.row)
+                Contants.contactDatasources.removeAll(where: {$0.id == object.id}) // remove object if condition match
                 mainTableView.beginUpdates()
                 mainTableView.deleteRows(at: [indexPath], with: .automatic)
                 mainTableView.endUpdates()
@@ -203,8 +218,9 @@ extension HomeViewController : UIImagePickerControllerDelegate,UINavigationContr
             guard let nameText = beetweenTextField.text else {return}
             guard let phoneText = medialTextField.text else {return}
             if nameText.isEmpty == false && phoneText.isEmpty == false {
-                //MARK: - Fix
-                // lấy được section-> check lấy row->add
+                Contants.contactDatasources.append(Contact(name: nameText, phone: nameText, avt:image))
+                sortContacts(modelArr: Contants.contactDatasources)
+                mainTableView.reloadData()
             }
             
         }
@@ -215,23 +231,17 @@ extension HomeViewController : UIImagePickerControllerDelegate,UINavigationContr
     }
     
 }
-extension UIImage {
-    func toPngString() -> String? {
-        let data = self.pngData()
-        return data?.base64EncodedString(options: .endLineWithLineFeed)
-    }
-}
 //MARK: - searchbar delegate
 extension HomeViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let filterd = contactDatasources.filter({ $0.name.contains(searchBar.text!.uppercased())})
+        let filterd = Contants.contactDatasources.filter({ $0.name.uppercased().contains(searchBar.text!.uppercased())})
         sortContacts(modelArr: filterd)
         mainTableView.reloadData()
         searchBar.resignFirstResponder()
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
-            sortContacts(modelArr: contactDatasources)
+            sortContacts(modelArr: Contants.contactDatasources)
             mainTableView.reloadData()
             searchBar.resignFirstResponder()
         }
