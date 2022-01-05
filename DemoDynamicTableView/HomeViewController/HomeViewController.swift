@@ -9,22 +9,22 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
-    struct AphabelContact {
+    struct AphabetContact {
         var key: String
-        var values: [Contact]
+        var values: [Contacts]
     }
     
-    private var displayContact: [AphabelContact] = []
+    private var displayContact: [AphabetContact] = []
     
-    //MARK: - IBOutlet
+//MARK: - IBOutlet
     @IBOutlet weak var plusView: UIView!
     @IBOutlet weak var mainSearchBar: UISearchBar!
     @IBOutlet weak var mainTableView: UITableView!
 }
 //MARK: - sortContact
 extension HomeViewController {
-    private func sortContacts(modelArr: [Contact]) {
-        var contactDictionary = [String:[Contact]]()
+    private func sortContacts(modelArr: [Contacts]) {
+        var contactDictionary = [String:[Contacts]]()
         displayContact.removeAll()
         for contact in modelArr {
             let contactKey = String(contact.name.prefix(1)).uppercased() // aa->A
@@ -38,7 +38,7 @@ extension HomeViewController {
         let alphabelDic = contactDictionary.sorted { a, b in
             a.0 < b.0 }
         for i in alphabelDic {
-            let object = AphabelContact(key: i.key, values: i.value)
+            let object = AphabetContact(key: i.key, values: i.value)
             displayContact.append(object)
         }
         
@@ -70,7 +70,7 @@ extension HomeViewController {
     }
 }
 
-//MARK: - Add Button
+//MARK: - Add Contact Button
 extension HomeViewController {
     @IBAction func pressedAddBtn(_ sender: Any) {
         let picker = UIImagePickerController()
@@ -218,7 +218,7 @@ extension HomeViewController : UIImagePickerControllerDelegate,UINavigationContr
             guard let nameText = beetweenTextField.text else {return}
             guard let phoneText = medialTextField.text else {return}
             if nameText.isEmpty == false && phoneText.isEmpty == false {
-                Contants.contactDatasources.append(Contact(name: nameText, phone: nameText, avt:image))
+                Contants.contactDatasources.append(Contacts(name: nameText, phone: nameText, avt:image))
                 sortContacts(modelArr: Contants.contactDatasources)
                 mainTableView.reloadData()
             }

@@ -9,18 +9,18 @@ import Foundation
 struct Contants {
     static let identifier = "HomeTableCell"
     static let nibName = "HomeTableViewCell"
-    static var contactDatasources: [Contact] = [Contact(name: "Dao Hung", phone: "092828", avt: #imageLiteral(resourceName: "hung")),
-                                                Contact(name: "Nam Phu", phone: "0917618517", avt: #imageLiteral(resourceName: "toan")),
-                                                Contact(name: "Van Kiet", phone: "0917618517", avt: #imageLiteral(resourceName: "hoang")),
-                                                Contact(name: "Anh Pham", phone: "0917618517", avt: #imageLiteral(resourceName: "kiet")),
-                                                Contact(name: "Anh Tran", phone: "0917618517", avt: #imageLiteral(resourceName: "kiet")),
-                                                Contact(name: "Bao Nam", phone: "0917618517", avt: #imageLiteral(resourceName: "toan")),
-                                                Contact(name: "Bao Tin", phone: "0917618517", avt: #imageLiteral(resourceName: "duy")),
-                                                Contact(name: "Giao Thuy", phone: "0917618517", avt: #imageLiteral(resourceName: "phu")),
-                                                Contact(name: "Kha Le", phone: "0917618517", avt: #imageLiteral(resourceName: "hoang")),
-                                                Contact(name: "Le Tin", phone: "0917618517", avt: #imageLiteral(resourceName: "duy")),
-                                                Contact(name: "Nam Nguyen", phone: "0917618517", avt: #imageLiteral(resourceName: "kiet")),
-                                                Contact(name: "Mai Ho", phone: "0917618517", avt: #imageLiteral(resourceName: "hoang"))]
+    static var contactDatasources: [Contacts] = [Contacts(name: "Dao Hung", phone: "092828", avt: #imageLiteral(resourceName: "hung")),
+                                                Contacts(name: "Nam Phu", phone: "0917618517", avt: #imageLiteral(resourceName: "toan")),
+                                                Contacts(name: "Van Kiet", phone: "0917618517", avt: #imageLiteral(resourceName: "hoang")),
+                                                Contacts(name: "Anh Pham", phone: "0917618517", avt: #imageLiteral(resourceName: "kiet")),
+                                                Contacts(name: "Anh Tran", phone: "0917618517", avt: #imageLiteral(resourceName: "kiet")),
+                                                Contacts(name: "Bao Nam", phone: "0917618517", avt: #imageLiteral(resourceName: "toan")),
+                                                Contacts(name: "Bao Tin", phone: "0917618517", avt: #imageLiteral(resourceName: "duy")),
+                                                Contacts(name: "Giao Thuy", phone: "0917618517", avt: #imageLiteral(resourceName: "phu")),
+                                                Contacts(name: "Kha Le", phone: "0917618517", avt: #imageLiteral(resourceName: "hoang")),
+                                                Contacts(name: "Le Tin", phone: "0917618517", avt: #imageLiteral(resourceName: "duy")),
+                                                Contacts(name: "Nam Nguyen", phone: "0917618517", avt: #imageLiteral(resourceName: "kiet")),
+                                                Contacts(name: "Mai Ho", phone: "0917618517", avt: #imageLiteral(resourceName: "hoang"))]
 }
 struct CellActionImage {
     static let pinImg = "pin.fill"

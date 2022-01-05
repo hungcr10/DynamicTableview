@@ -23,7 +23,7 @@ class HomeTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
     }
-    public func configure(with model: Contact) {
+    public func configure(with model: Contacts) {
         self.avatarImgView.image = model.avt
         self.phoneLabel.text = model.phone
         self.nameLabel.text = model.name

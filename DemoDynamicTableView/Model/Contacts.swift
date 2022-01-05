@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct Contact {
+struct Contacts {
      let id: String = UUID().uuidString //auto generate id
      var name: String
      var phone: String
