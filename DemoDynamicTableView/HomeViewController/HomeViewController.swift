@@ -1,9 +1,3 @@
-//
-//  HomeViewController.swift
-//  DemoDynamicTableView
-//
-//  Created by CristianoDaoHung on 30/12/2021.
-//
 
 import UIKit
 
@@ -51,7 +45,7 @@ extension HomeViewController {
         super.viewDidLoad()
         setUpView()
         registerTableViewCell()
-        sortContacts(modelArr: Contants.contactDatasources)
+        sortContacts(modelArr: InfoContacts.contactDatasources)
     }
 }
 
@@ -62,7 +56,7 @@ extension HomeViewController {
         mainTableView.sectionIndexColor = .systemGreen
     }
     private func registerTableViewCell() {
-        mainTableView.register(UINib(nibName: Contants.nibName, bundle: nil), forCellReuseIdentifier: Contants.identifier)
+        mainTableView.register(UINib(nibName: Identifier.nibName, bundle: nil), forCellReuseIdentifier: Identifier.identifier)
         mainTableView.dataSource = self
         mainTableView.delegate = self
         mainSearchBar.delegate = self
@@ -89,7 +83,7 @@ extension HomeViewController: UITableViewDataSource {
         return contactValues[section].values.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = mainTableView.dequeueReusableCell(withIdentifier: Contants.identifier) as! HomeTableViewCell
+        let cell = mainTableView.dequeueReusableCell(withIdentifier: Identifier.identifier) as! HomeTableViewCell
         cell.configure(with:displayContact[indexPath.section].values[indexPath.row])
         cell.separatorInset = UIEdgeInsets(top: 0, left: 100, bottom: 0, right: 0)
         print(indexPath.row)
@@ -151,13 +145,13 @@ extension HomeViewController: UITableViewDelegate {
             print("inde", indexPath)
             if displayContact[indexPath.section].values.count == 1 {
                 let object = displayContact[indexPath.section].values[indexPath.row]
-                Contants.contactDatasources.removeAll { $0.id == object.id}
+                InfoContacts.contactDatasources.removeAll { $0.id == object.id}
                 displayContact.remove(at: indexPath.section)
                 self.mainTableView.deleteSections(NSIndexSet(index: indexPath.section) as IndexSet, with: .fade)
             } else {
                 let object = displayContact[indexPath.section].values[indexPath.row]
                 displayContact[indexPath.section].values.remove(at: indexPath.row)
-                Contants.contactDatasources.removeAll(where: {$0.id == object.id}) // remove object if condition match
+                InfoContacts.contactDatasources.removeAll(where: {$0.id == object.id}) // remove object if condition match
                 mainTableView.beginUpdates()
                 mainTableView.deleteRows(at: [indexPath], with: .automatic)
                 mainTableView.endUpdates()
@@ -217,8 +211,8 @@ extension HomeViewController : UIImagePickerControllerDelegate,UINavigationContr
             guard let nameText = beetweenTextField.text else {return}
             guard let phoneText = medialTextField.text else {return}
             if nameText.isEmpty == false && phoneText.isEmpty == false {
-                Contants.contactDatasources.append(Contacts(name: nameText, phone: nameText, avt:image))
-                sortContacts(modelArr: Contants.contactDatasources)
+                InfoContacts.contactDatasources.append(Contacts(name: nameText, phone: nameText, avt:image))
+                sortContacts(modelArr: InfoContacts.contactDatasources)
                 mainTableView.reloadData()
             }
             
@@ -233,14 +227,14 @@ extension HomeViewController : UIImagePickerControllerDelegate,UINavigationContr
 //MARK: - searchbar delegate
 extension HomeViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        let filterd = Contants.contactDatasources.filter({ $0.name.uppercased().contains(searchBar.text!.uppercased())})
+        let filterd = InfoContacts.contactDatasources.filter({ $0.name.uppercased().contains(searchBar.text!.uppercased())})
         sortContacts(modelArr: filterd)
         mainTableView.reloadData()
         searchBar.resignFirstResponder()
     }
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchBar.text?.count == 0 {
-            sortContacts(modelArr: Contants.contactDatasources)
+            sortContacts(modelArr: InfoContacts.contactDatasources)
             mainTableView.reloadData()
             searchBar.resignFirstResponder()
         }
